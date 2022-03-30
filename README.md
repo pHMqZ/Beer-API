@@ -18,6 +18,20 @@
     <li> Versionamento GIT.</li>
 </ul>
 
+<h3>Rodando o projeto</h3>
+<p> Executando projeto pelo terminal:</p>
+```shell script
+mvn spring-boot:run
+```
+<p> Executar suíte de teste desenvolvidos durante a live:</p>
+```shell script
+mvn clean test
+```
+
+<p> Após, abrir o seguinte link e visualizar a aplicação:</p>
+```shell script
+http://localhost:8080/api/v1/beers
+```
 
 <a href='https://github.com/rpeleias-v1/beer_api_digital_innovation_one'> Aplicação base mostrada na live</a>
 
