@@ -21,8 +21,7 @@ public class BeerService {
 	@Autowired
 	private BeerRepository beerRepo;
 	
-	
-	private BeerMapper beerMap;
+	private final BeerMapper beerMap = BeerMapper.INSTANCE;
 	
 	public BeerDTO createBeer(BeerDTO beerDTO) throws BeerAlreadyRegisteredException{
 		verifyIfIsAlreadyRegistered(beerDTO.getName());

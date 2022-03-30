@@ -10,8 +10,8 @@ import com.pms.dio.model.Beer;
 public interface BeerMapper {
 
 	BeerMapper INSTANCE = Mappers.getMapper(BeerMapper.class);
-	
-	Beer toModel(BeerDTO beerDTO);
-	
-	BeerDTO toDTO(Beer beer);
+
+    Beer toModel(BeerDTO beerDTO);
+
+    BeerDTO toDTO(Beer beer);;
 }
