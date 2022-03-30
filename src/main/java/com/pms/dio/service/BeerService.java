@@ -21,7 +21,7 @@ public class BeerService {
 	@Autowired
 	private BeerRepository beerRepo;
 	
-	@Autowired
+	
 	private BeerMapper beerMap;
 	
 	public BeerDTO createBeer(BeerDTO beerDTO) throws BeerAlreadyRegisteredException{
