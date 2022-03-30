@@ -22,7 +22,7 @@ public class Beer {
 	
 	private int max;
 	
-	private int quality;
+	private int quantity;
 	
 	private BeerType type;
 }
