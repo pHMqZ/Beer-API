@@ -1,7 +1,7 @@
 package com.pms.dio.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 import java.util.Optional;
 
@@ -37,22 +37,35 @@ public class BeerServiceTest {
 	@Test
 	void whenBeerInformedThenItShouldBeCreated() throws BeerAlreadyRegisteredException {
 		//dado
-		BeerDTO expectedbeerDTO = BeerDTOBuilder.builder().build().toBeerDTO();
-		Beer savedBeer = beerMapper.toModel(expectedbeerDTO);
+		BeerDTO expectedBeerDTO = BeerDTOBuilder.builder().build().toBeerDTO();
+		Beer savedBeer = beerMapper.toModel(expectedBeerDTO);
 		
 		//quando
-		when(beerRepo.findByName(expectedbeerDTO.getName())).thenReturn(Optional.empty());
+		when(beerRepo.findByName(expectedBeerDTO.getName())).thenReturn(Optional.empty());
 		when(beerRepo.save(savedBeer)).thenReturn(savedBeer);
 		
 		//então
-		BeerDTO createdBeerDTO = beerServ.createBeer(expectedbeerDTO);
+		BeerDTO createdBeerDTO = beerServ.createBeer(expectedBeerDTO);
 		
-		assertThat(createdBeerDTO.getId(), is(equalTo(expectedbeerDTO.getId())));
-		assertThat(createdBeerDTO.getName(), is(equalTo(expectedbeerDTO.getName())));
-		assertThat(createdBeerDTO.getQuantity(), is(equalTo(expectedbeerDTO.getQuantity())));
+		assertThat(createdBeerDTO.getId(), is(equalTo(expectedBeerDTO.getId())));
+		assertThat(createdBeerDTO.getName(), is(equalTo(expectedBeerDTO.getName())));
+		assertThat(createdBeerDTO.getQuantity(), is(equalTo(expectedBeerDTO.getQuantity())));
 		
 		assertThat(createdBeerDTO.getQuantity(), is(greaterThan(2)));
 	}
 	
-	
+	//ExceptionTest-AlreadyRegistered
+	@Test
+	void wheAlreadyRegisteredBeerInformedThenExceptionShouldBeThrow() throws BeerAlreadyRegisteredException {
+		//given
+		BeerDTO expectedBeerDTO = BeerDTOBuilder.builder().build().toBeerDTO();
+		Beer duplicatedBeer = beerMapper.toModel(expectedBeerDTO);
+		
+		//when
+		when(beerRepo.findByName(expectedBeerDTO.getName())).thenReturn(Optional.of(duplicatedBeer));
+		
+		//then
+		assertThrows(BeerAlreadyRegisteredException.class,() -> beerServ.createBeer(expectedBeerDTO));
+		
+	}
 }
