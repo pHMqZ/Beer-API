@@ -16,11 +16,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
 import com.pms.dio.builder.BeerDTOBuilder;
 import com.pms.dio.dto.BeerDTO;
+import com.pms.dio.exception.BeerNotFoundException;
 import com.pms.dio.service.BeerService;
 
 @ExtendWith(MockitoExtension.class)
@@ -78,6 +80,40 @@ public class BeerControllerTest {
     		.contentType(MediaType.APPLICATION_JSON)
     		.content(asJsonString(beerDTO)))
     		.andExpect(status().isBadRequest());
+    }
+    //Testando GET - Find By Name
+    @Test
+    void wheGETIsCalledWithValidNameThenOkStatusIsReturned() throws Exception {
+    	//given
+    	BeerDTO beerDTO = BeerDTOBuilder.builder().build().toBeerDTO();
+    	
+    	//when
+    	when(beerServ.findByName(beerDTO.getName())).thenReturn(beerDTO);
+    	
+    	//then
+    	mockMvc.perform(MockMvcRequestBuilders.get(BEER_API_URL_PATH + "/" + beerDTO.getName())
+    			.contentType(MediaType.APPLICATION_JSON))
+    			.andExpect(status().isOk())
+    			.andExpect(jsonPath("$.name", is(beerDTO.getName())))
+        		.andExpect(jsonPath("$.brand", is(beerDTO.getBrand())))
+        		.andExpect(jsonPath("$.type", is(beerDTO.getType().toString())));
+    	
+    }
+    
+    //Testando Exceção - Find By Name
+    @Test
+    void wheGETIsCalledWithoutRegisteredNameTheNotFoundIsReturned() throws Exception {
+    	//given
+    	BeerDTO beerDTO = BeerDTOBuilder.builder().build().toBeerDTO();
+    	
+    	//when
+    	when(beerServ.findByName(beerDTO.getName())).thenThrow(BeerNotFoundException.class);
+    	
+    	//then
+    	mockMvc.perform(MockMvcRequestBuilders.get(BEER_API_URL_PATH + "/" + beerDTO.getName())
+    			.contentType(MediaType.APPLICATION_JSON))
+    			.andExpect(status().isNotFound());
+    	
     }
 	
 	
