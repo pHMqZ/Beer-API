@@ -66,7 +66,7 @@ public class BeerControllerTest {
     		.andExpect(jsonPath("$.type", is(beerDTO.getType().toString())));
     }
     
-    //Testando Beer Validation
+    //Testando POST Validation (Se falta um campo, não salva a cerveja)
     @Test
     void whenPOSTIsCalledwithoutRequiredFielThenAnErrorIsReturned() throws Exception {
     	//given

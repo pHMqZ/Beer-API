@@ -16,6 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import com.pms.dio.builder.BeerDTOBuilder;
 import com.pms.dio.dto.BeerDTO;
 import com.pms.dio.exception.BeerAlreadyRegisteredException;
+import com.pms.dio.exception.BeerNotFoundException;
 import com.pms.dio.mapper.BeerMapper;
 import com.pms.dio.model.Beer;
 import com.pms.dio.repository.BeerRepository;
@@ -68,4 +69,24 @@ public class BeerServiceTest {
 		assertThrows(BeerAlreadyRegisteredException.class,() -> beerServ.createBeer(expectedBeerDTO));
 		
 	}
+	
+	//FindByName Teste
+	@Test
+	void whenValidBeerNameIsGivenTheReturnABeer() throws BeerNotFoundException {
+		//given
+		BeerDTO expectedFoundBeerDTO = BeerDTOBuilder.builder().build().toBeerDTO();
+		Beer expectedFoundBeer = beerMapper.toModel(expectedFoundBeerDTO);
+		
+		//when
+		when(beerRepo.findByName(expectedFoundBeer.getName())).thenReturn(Optional.of(expectedFoundBeer));
+		
+		//then
+		BeerDTO foundBeerDTO = beerServ.findByName(expectedFoundBeerDTO.getName());
+		
+		assertThat(foundBeerDTO, is(equalTo(expectedFoundBeerDTO)));
+		
+		
+	}
+	
+	
 }
