@@ -3,6 +3,8 @@ package com.pms.dio.service;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.*;
@@ -100,5 +102,35 @@ public class BeerServiceTest {
 		//then
 		assertThrows(BeerNotFoundException.class, () -> beerServ.findByName(expectedFoundBeerDTO.getName()));
 		
+	}
+	//Teste - Find All
+	@Test
+	void whenListBeerIsCalledThenReturnAListOfBeers() {
+		//given
+		BeerDTO expectedFoundBeerDTO = BeerDTOBuilder.builder().build().toBeerDTO();
+		Beer expectedFoundBeer = beerMapper.toModel(expectedFoundBeerDTO);
+		
+		//when
+		when(beerRepo.findAll()).thenReturn(Collections.singletonList(expectedFoundBeer));
+		
+		//then
+		List<BeerDTO> foundBeerDTO = beerServ.listAll();
+		
+		assertThat(foundBeerDTO, is(not(empty())));
+		assertThat(foundBeerDTO.get(0), is(equalTo(expectedFoundBeerDTO)));
+		
+	}
+
+
+	@Test
+	void whenListBeerIsCalledThenReturnAnEmptyListOfBeers() {
+		// when
+		when(beerRepo.findAll()).thenReturn(Collections.EMPTY_LIST);
+
+		// then
+		List<BeerDTO> foundBeerDTO = beerServ.listAll();
+
+		assertThat(foundBeerDTO, is(empty()));
+
 	}
 }
